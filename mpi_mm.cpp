@@ -11,6 +11,8 @@
 *   Center. Converted to MPI: George L. Gusciora, MHPCC (1/95)
 * LAST REVISED: 09/29/2021
 ******************************************************************************/
+// Rahul Singh
+// 132002363
 #include <mpi.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -70,10 +72,9 @@ numworkers = numtasks-1;
 
 // Create a new communicator for workers
 MPI_Comm worker_comm;
-MPI_Comm_split(MPI_COMM_WORLD, taskid == MASTER ? MPI_UNDEFINED : 1, taskid, &worker_comm);
-
+MPI_Comm_split(MPI_COMM_WORLD, taskid == MASTER ? MPI_UNDEFINED : 0, taskid, &worker_comm);
 // WHOLE PROGRAM COMPUTATION PART STARTS HERE
-
+double start_time = MPI_Wtime();
 /**************************** master task ************************************/
    if (taskid == MASTER)
    {
@@ -92,10 +93,10 @@ MPI_Comm_split(MPI_COMM_WORLD, taskid == MASTER ? MPI_UNDEFINED : 1, taskid, &wo
             b[i][j]= i*j;
       
       //INITIALIZATION PART FOR THE MASTER PROCESS ENDS HERE
-      
+      master_initialization_time = MPI_Wtime() - master_init_start;
       
       //SEND-RECEIVE PART FOR THE MASTER PROCESS STARTS HERE
-
+      double master_send_start = MPI_Wtime();
       /* Send matrix data to the worker tasks */
       averow = sizeOfMatrix/numworkers;
       extra = sizeOfMatrix%numworkers;
@@ -103,6 +104,7 @@ MPI_Comm_split(MPI_COMM_WORLD, taskid == MASTER ? MPI_UNDEFINED : 1, taskid, &wo
       mtype = FROM_MASTER;
       for (dest=1; dest<=numworkers; dest++)
       {
+         // Some notes for myself to help me understand the code
          rows = (dest <= extra) ? averow+1 : averow; // distribute the work evenly (1 extra row each worker where dest is less than or equal to extra)   	
          printf("Sending %d rows to task %d offset=%d\n",rows,dest,offset);
          MPI_Send(&offset, 1, MPI_INT, dest, mtype, MPI_COMM_WORLD); // Send the offset (starting row) to the worker
@@ -126,7 +128,7 @@ MPI_Comm_split(MPI_COMM_WORLD, taskid == MASTER ? MPI_UNDEFINED : 1, taskid, &wo
       }
       
       //SEND-RECEIVE PART FOR THE MASTER PROCESS ENDS HERE
-
+      master_send_receive_time = MPI_Wtime() - master_send_start;
       /* Print results - you can uncomment the following lines to print the result matrix */
       /*
       printf("******************************************************\n");
@@ -147,7 +149,7 @@ MPI_Comm_split(MPI_COMM_WORLD, taskid == MASTER ? MPI_UNDEFINED : 1, taskid, &wo
    if (taskid > MASTER)
    {
       //RECEIVING PART FOR WORKER PROCESS STARTS HERE
-
+      double receive_start = MPI_Wtime();
       mtype = FROM_MASTER;
       MPI_Recv(&offset, 1, MPI_INT, MASTER, mtype, MPI_COMM_WORLD, &status);
       MPI_Recv(&rows, 1, MPI_INT, MASTER, mtype, MPI_COMM_WORLD, &status);
@@ -155,10 +157,10 @@ MPI_Comm_split(MPI_COMM_WORLD, taskid == MASTER ? MPI_UNDEFINED : 1, taskid, &wo
       MPI_Recv(&b, sizeOfMatrix*sizeOfMatrix, MPI_DOUBLE, MASTER, mtype, MPI_COMM_WORLD, &status);
       
       //RECEIVING PART FOR WORKER PROCESS ENDS HERE
-      
+      worker_receive_time = MPI_Wtime() - receive_start;
 
       //CALCULATION PART FOR WORKER PROCESS STARTS HERE
-
+      double calculation_start = MPI_Wtime();
       for (k=0; k<sizeOfMatrix; k++)
          for (i=0; i<rows; i++)
          {
@@ -168,30 +170,33 @@ MPI_Comm_split(MPI_COMM_WORLD, taskid == MASTER ? MPI_UNDEFINED : 1, taskid, &wo
          }
 
       //CALCULATION PART FOR WORKER PROCESS ENDS HERE
+      worker_calculation_time = MPI_Wtime() - calculation_start;
       
       
       //SENDING PART FOR WORKER PROCESS STARTS HERE
-
+      double send_start = MPI_Wtime();
       mtype = FROM_WORKER;
       MPI_Send(&offset, 1, MPI_INT, MASTER, mtype, MPI_COMM_WORLD);
       MPI_Send(&rows, 1, MPI_INT, MASTER, mtype, MPI_COMM_WORLD);
       MPI_Send(&c, rows*sizeOfMatrix, MPI_DOUBLE, MASTER, mtype, MPI_COMM_WORLD);
 
       //SENDING PART FOR WORKER PROCESS ENDS HERE
+      worker_send_time = MPI_Wtime() - send_start;
    }
 
    // WHOLE PROGRAM COMPUTATION PART ENDS HERE
+   whole_computation_time = MPI_Wtime() - start_time;
 
    adiak::init(NULL); // initialize Adiak library
    adiak::user(); // logs the user who ran the program
-   adiak::launchdate();
-   adiak::libraries();
-   adiak::cmdline();
-   adiak::clustername();
-   adiak::value("num_procs", numtasks);
-   adiak::value("matrix_size", sizeOfMatrix);
-   adiak::value("program_name", "master_worker_matrix_multiplication");
-   adiak::value("matrix_datatype_size", sizeof(double));
+   adiak::launchdate(); // records the date and time when the program was started
+   adiak::libraries(); // logs the libraries used by the program
+   adiak::cmdline(); // logs the command line arguments used to run the program
+   adiak::clustername(); // logs the name of the cluster where the program was run
+   adiak::value("num_procs", numtasks); // logs the number of processes used in the program
+   adiak::value("matrix_size", sizeOfMatrix); // logs the size of the matrix
+   adiak::value("program_name", "master_worker_matrix_multiplication"); // logs the name of the program
+   adiak::value("matrix_datatype_size", sizeof(double)); // logs the size of the data type used in the matrix
 
    double worker_receive_time_max,
       worker_receive_time_min,
@@ -208,6 +213,19 @@ MPI_Comm_split(MPI_COMM_WORLD, taskid == MASTER ? MPI_UNDEFINED : 1, taskid, &wo
 
    /* USE MPI_Reduce here to calculate the minimum, maximum and the average times for the worker processes.
    MPI_Reduce (&sendbuf,&recvbuf,count,datatype,op,root,comm). https://hpc-tutorials.llnl.gov/mpi/collective_communication_routines/ */
+   if (taskid != MASTER) {
+      MPI_Reduce(&worker_receive_time, &worker_receive_time_max, 1, MPI_DOUBLE, MPI_MAX, 0, worker_comm);
+      MPI_Reduce(&worker_receive_time, &worker_receive_time_min, 1, MPI_DOUBLE, MPI_MIN, 0, worker_comm);
+      MPI_Reduce(&worker_receive_time, &worker_receive_time_sum, 1, MPI_DOUBLE, MPI_SUM, 0, worker_comm);
+
+      MPI_Reduce(&worker_calculation_time, &worker_calculation_time_max, 1, MPI_DOUBLE, MPI_MAX, 0, worker_comm);
+      MPI_Reduce(&worker_calculation_time, &worker_calculation_time_min, 1, MPI_DOUBLE, MPI_MIN, 0, worker_comm);
+      MPI_Reduce(&worker_calculation_time, &worker_calculation_time_sum, 1, MPI_DOUBLE, MPI_SUM, 0, worker_comm);
+
+      MPI_Reduce(&worker_send_time, &worker_send_time_max, 1, MPI_DOUBLE, MPI_MAX, 0, worker_comm);
+      MPI_Reduce(&worker_send_time, &worker_send_time_min, 1, MPI_DOUBLE, MPI_MIN, 0, worker_comm);
+      MPI_Reduce(&worker_send_time, &worker_send_time_sum, 1, MPI_DOUBLE, MPI_SUM, 0, worker_comm);
+   }
 
 
    if (taskid == 0)
