@@ -148,3 +148,4 @@ Worker Send Time Average: 0.000164
 ******************************************************
 JOBID        NAME                 USER                     PARTITION              NODES  CPUS  STATE        TIME         TIME_LEFT    START_TIME        REASON                   NODELIST
 11404313     JobName              rahul_2003               short                  16     64    RUNNING      0:10         14:50        2024-09-19T12:00  None                     c[001,005-006,013,015-016,019-020,024,027-029,031,035,063-064]
+

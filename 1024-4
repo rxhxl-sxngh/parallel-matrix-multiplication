@@ -28,3 +28,4 @@ Master Send and Receive Time: 3.533352
 ******************************************************
 JOBID        NAME                 USER                     PARTITION              NODES  CPUS  STATE        TIME         TIME_LEFT    START_TIME        REASON                   NODELIST
 11404000     JobName              rahul_2003               short                  16     64    RUNNING      0:09         14:51        2024-09-19T11:39  None                     c[501-502,505,508,515-519,522-525,528-530]
+
