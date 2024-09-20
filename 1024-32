@@ -1,0 +1,86 @@
+mpi_mm has started with 32 tasks.
+Initializing arrays...
+Sending 34 rows to task 1 offset=0
+Sending 33 rows to task 2 offset=34
+Sending 33 rows to task 3 offset=67
+Sending 33 rows to task 4 offset=100
+Sending 33 rows to task 5 offset=133
+Sending 33 rows to task 6 offset=166
+Sending 33 rows to task 7 offset=199
+Sending 33 rows to task 8 offset=232
+Sending 33 rows to task 9 offset=265
+Sending 33 rows to task 10 offset=298
+Sending 33 rows to task 11 offset=331
+Sending 33 rows to task 12 offset=364
+Sending 33 rows to task 13 offset=397
+Sending 33 rows to task 14 offset=430
+Sending 33 rows to task 15 offset=463
+Sending 33 rows to task 16 offset=496
+Sending 33 rows to task 17 offset=529
+Sending 33 rows to task 18 offset=562
+Sending 33 rows to task 19 offset=595
+Sending 33 rows to task 20 offset=628
+Sending 33 rows to task 21 offset=661
+Sending 33 rows to task 22 offset=694
+Sending 33 rows to task 23 offset=727
+Sending 33 rows to task 24 offset=760
+Sending 33 rows to task 25 offset=793
+Sending 33 rows to task 26 offset=826
+Sending 33 rows to task 27 offset=859
+Sending 33 rows to task 28 offset=892
+Sending 33 rows to task 29 offset=925
+Sending 33 rows to task 30 offset=958
+Sending 33 rows to task 31 offset=991
+Received results from task 1
+Received results from task 2
+Received results from task 3
+Received results from task 4
+Received results from task 5
+Received results from task 6
+Received results from task 7
+Received results from task 8
+Received results from task 9
+Received results from task 10
+Received results from task 11
+Received results from task 12
+Received results from task 13
+Received results from task 14
+Received results from task 15
+Received results from task 16
+Received results from task 17
+Received results from task 18
+Received results from task 19
+Received results from task 20
+Received results from task 21
+Received results from task 22
+Received results from task 23
+Received results from task 24
+Received results from task 25
+Received results from task 26
+Received results from task 27
+Received results from task 28
+Received results from task 29
+Received results from task 30
+Received results from task 31
+******************************************************
+Worker Times:
+Worker Receive Time Max: 0.109260 
+Worker Receive Time Min: 0.016058 
+Worker Receive Time Average: 0.061489 
+Worker Calculation Time Max: 0.473132 
+Worker Calculation Time Min: 0.303332 
+Worker Calculation Time Average: 0.338775 
+Worker Send Time Max: 0.000541 
+Worker Send Time Min: 0.000071 
+Worker Send Time Average: 0.000110 
+
+******************************************************
+******************************************************
+Master Times:
+Whole Computation Time: 0.564309 
+Master Initialization Time: 0.010972 
+Master Send and Receive Time: 0.553237 
+
+******************************************************
+JOBID        NAME                 USER                     PARTITION              NODES  CPUS  STATE        TIME         TIME_LEFT    START_TIME        REASON                   NODELIST
+11404257     JobName              rahul_2003               short                  16     64    RUNNING      0:18         14:42        2024-09-19T11:58  None                     c[501-502,505,508,511,514-520,522-525]

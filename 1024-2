@@ -1,0 +1,26 @@
+mpi_mm has started with 2 tasks.
+Initializing arrays...
+Sending 1024 rows to task 1 offset=0
+Received results from task 1
+******************************************************
+Master Times:
+Whole Computation Time: 10.496779 
+Master Initialization Time: 0.010118 
+Master Send and Receive Time: 10.486646 
+
+******************************************************
+******************************************************
+Worker Times:
+Worker Receive Time Max: 0.016786 
+Worker Receive Time Min: 0.016786 
+Worker Receive Time Average: 0.016786 
+Worker Calculation Time Max: 10.476516 
+Worker Calculation Time Min: 10.476516 
+Worker Calculation Time Average: 10.476516 
+Worker Send Time Max: 0.002887 
+Worker Send Time Min: 0.002887 
+Worker Send Time Average: 0.002887 
+
+******************************************************
+JOBID        NAME                 USER                     PARTITION              NODES  CPUS  STATE        TIME         TIME_LEFT    START_TIME        REASON                   NODELIST
+11403984     JobName              rahul_2003               short                  16     64    RUNNING      0:25         14:35        2024-09-19T11:37  None                     c[501-502,505,508,515-519,523-525,529-530,554,558]

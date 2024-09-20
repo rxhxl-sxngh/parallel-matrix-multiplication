@@ -1,0 +1,38 @@
+mpi_mm has started with 8 tasks.
+Initializing arrays...
+Sending 19 rows to task 1 offset=0
+Sending 19 rows to task 2 offset=19
+Sending 18 rows to task 3 offset=38
+Sending 18 rows to task 4 offset=56
+Sending 18 rows to task 5 offset=74
+Sending 18 rows to task 6 offset=92
+Sending 18 rows to task 7 offset=110
+Received results from task 1
+Received results from task 2
+Received results from task 3
+Received results from task 4
+Received results from task 5
+Received results from task 6
+Received results from task 7
+******************************************************
+Master Times:
+Whole Computation Time: 0.006783 
+Master Initialization Time: 0.000626 
+Master Send and Receive Time: 0.006061 
+
+******************************************************
+******************************************************
+Worker Times:
+Worker Receive Time Max: 0.001875 
+Worker Receive Time Min: 0.000390 
+Worker Receive Time Average: 0.001441 
+Worker Calculation Time Max: 0.001457 
+Worker Calculation Time Min: 0.001372 
+Worker Calculation Time Average: 0.001399 
+Worker Send Time Max: 0.003384 
+Worker Send Time Min: 0.000016 
+Worker Send Time Average: 0.000954 
+
+******************************************************
+JOBID        NAME                 USER                     PARTITION              NODES  CPUS  STATE        TIME         TIME_LEFT    START_TIME        REASON                   NODELIST
+11403933     JobName              rahul_2003               short                  16     64    RUNNING      0:09         14:51        2024-09-19T11:29  None                     c[501-502,505,508,514-520,523-525,529-530]
